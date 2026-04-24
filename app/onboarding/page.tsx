@@ -23,7 +23,7 @@ export default function OnBoarding() {
     const data = await response.json();
 
     if (data.success) {
-      router.push("/dashboard/admin");
+      router.push("/admin");
     }
   };
   return (
