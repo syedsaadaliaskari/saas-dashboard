@@ -8,6 +8,9 @@ export const { signIn, signOut, handlers, auth } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

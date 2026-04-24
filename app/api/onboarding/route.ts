@@ -11,10 +11,11 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const { companyname } = body;
-
+    const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     const tenant = await prisma.tenant.create({
       data: {
         name: companyname,
+        inviteCode: inviteCode,
       },
     });
 
