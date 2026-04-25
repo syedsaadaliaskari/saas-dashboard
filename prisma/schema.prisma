@@ -11,8 +11,9 @@ model User {
  id        String   @id @default(cuid())
  name      String
  email     String   @unique
- tenantId  String
- tenant    Tenant   @relation(fields: [tenantId], references: [id])
+ password  String?
+ tenantId  String?
+ tenant    Tenant?  @relation(fields: [tenantId], references: [id])
  role      String   @default("USER")
  createdAt DateTime @default(now())
 }

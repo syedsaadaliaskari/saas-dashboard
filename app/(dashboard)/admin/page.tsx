@@ -2,7 +2,8 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import UserTable from "./UserTable";
+import { CopyButton } from "./CopyButton";
+import RoleDistributionChart from "./RoleDistributionChart";
 
 export default async function AdminDashboard() {
   const session = await auth();
@@ -11,10 +12,15 @@ export default async function AdminDashboard() {
   if (!session || !tenantId) {
     redirect("/signin");
   }
+
   const users = await prisma.user.findMany({
     where: { tenantId: tenantId },
   });
 
+  const roleData = [
+    { name: "Admins", value: users.filter((u) => u.role === "ADMIN").length },
+    { name: "Users", value: users.filter((u) => u.role === "USER").length },
+  ];
   const tenant = await prisma.tenant.findUnique({
     where: {
       id: tenantId,
@@ -58,13 +64,13 @@ export default async function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <p>{tenant?.inviteCode}</p>
+              <CopyButton code={tenant?.inviteCode ?? ""} />
             </CardContent>
           </Card>
         </div>
-
-        <div className="max-w-4xl mx-auto px-5">
-          <h2 className="text-xl font-bold mb-4">All Users</h2>
-          <UserTable users={users} />
+        <div className="bg-white rounded-lg p-6 shadow-sm mt-6 max-w-4xl mx-auto">
+          <h2 className="text-lg font-semibold mb-4">Role Distribution</h2>
+          <RoleDistributionChart data={roleData} />
         </div>
       </main>
     </div>
