@@ -1,5 +1,12 @@
 "use client";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 export default function RoleDistributionChart({
   data,
@@ -25,6 +32,7 @@ export default function RoleDistributionChart({
           ))}
         </Pie>
         <Tooltip />
+        <Legend />
       </PieChart>
     </ResponsiveContainer>
   );
