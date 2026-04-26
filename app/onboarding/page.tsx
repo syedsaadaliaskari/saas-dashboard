@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function OnBoarding() {
   const [companyname, setCompanyName] = useState("");
@@ -25,7 +26,7 @@ export default function OnBoarding() {
     const data = await response.json();
 
     if (data.success) {
-      window.location.href = "/api/auth/signin?callbackUrl=/admin";
+      await signIn("google", { callbackUrl: "/admin" });
     }
   };
 
@@ -41,7 +42,7 @@ export default function OnBoarding() {
     const data = await response.json();
 
     if (data.success) {
-      window.location.href = "/api/auth/signin?callbackUrl=/user";
+      await signIn("google", { callbackUrl: "/user" });
     } else {
       setError("Invalid invite code. Please try again."); // ← show error
     }
