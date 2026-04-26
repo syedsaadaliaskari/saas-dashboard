@@ -25,7 +25,7 @@ export default function OnBoarding() {
     const data = await response.json();
 
     if (data.success) {
-      router.push("/admin");
+      window.location.href = "/api/auth/signin?callbackUrl=/admin";
     }
   };
 
@@ -41,7 +41,7 @@ export default function OnBoarding() {
     const data = await response.json();
 
     if (data.success) {
-      router.push("/user");
+      window.location.href = "/api/auth/signin?callbackUrl=/user";
     } else {
       setError("Invalid invite code. Please try again."); // ← show error
     }
