@@ -18,6 +18,18 @@ export async function POST(request: Request) {
   if (!tenant)
     return NextResponse.json({ error: "Invalid invite code" }, { status: 404 });
 
+  const existingUser = await prisma.user.findUnique({
+    where: { email: email ?? "" },
+  });
+
+  if (existingUser) {
+    return NextResponse.json(
+      {
+        error: "Account already exists.",
+      },
+      { status: 400 },
+    );
+  }
   await prisma.user.create({
     data: {
       name: user ?? "",

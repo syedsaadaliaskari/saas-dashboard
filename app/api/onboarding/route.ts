@@ -10,6 +10,19 @@ export async function POST(request: Request) {
     const email = session?.user?.email;
     const body = await request.json();
 
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email ?? "" },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        {
+          error: "Account already exists. Please sign in.",
+        },
+        { status: 400 },
+      );
+    }
+
     const { companyname } = body;
     const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     const tenant = await prisma.tenant.create({
