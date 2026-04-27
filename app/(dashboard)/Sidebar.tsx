@@ -47,7 +47,7 @@ export function Sidebar({ role }: { role?: string }) {
       </Link>
 
       <Link
-        href="/user"
+        href={role === "ADMIN" ? "/admin" : "/user"}
         onClick={() => setIsOpen(false)}
         className="flex items-center gap-3 hover:bg-slate-700 px-3 py-2.5 rounded-lg transition-colors"
       >

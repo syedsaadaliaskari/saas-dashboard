@@ -14,23 +14,42 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+      const role = auth?.user?.role;
+      const tenantId = auth?.user?.tenantId;
+      const isAdmin = role === "ADMIN";
+
       const isAuthPage =
         nextUrl.pathname.startsWith("/signin") ||
         nextUrl.pathname.startsWith("/signup");
-
-      if (isAuthPage) return true;
-      if (!isLoggedIn) return false;
-
+      const isOnboarding = nextUrl.pathname.startsWith("/onboarding");
       const isAdminRoute = nextUrl.pathname.startsWith("/admin");
       const isUserRoute = nextUrl.pathname.startsWith("/user");
-      const isAdmin = auth?.user?.role === "ADMIN";
+
+      if (!isLoggedIn) {
+        if (isAuthPage || isOnboarding) return true;
+        return false;
+      }
+
+      if (isAuthPage) {
+        if (isAdmin) return Response.redirect(new URL("/admin", nextUrl));
+        return Response.redirect(new URL("/user", nextUrl));
+      }
+
+      if (isOnboarding && tenantId) {
+        if (isAdmin) return Response.redirect(new URL("/admin", nextUrl));
+        return Response.redirect(new URL("/user", nextUrl));
+      }
+
+      if (!tenantId && !isOnboarding) {
+        return Response.redirect(new URL("/onboarding", nextUrl));
+      }
 
       if (isUserRoute && isAdmin) {
-        return Response.redirect(new URL("/admin/dashboard", nextUrl));
+        return Response.redirect(new URL("/admin", nextUrl));
       }
 
       if (isAdminRoute && !isAdmin) {
-        return Response.redirect(new URL("/user/dashboard", nextUrl));
+        return Response.redirect(new URL("/user", nextUrl));
       }
 
       return true;
