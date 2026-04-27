@@ -44,68 +44,84 @@ export default async function UserDashboard() {
     {} as Record<string, number>,
   );
 
-  const chartData = Object.entries(usersByDate).map(([date, count]) => ({
-    date,
-    users: count,
-  }));
+  const chartData = Object.entries(usersByDate)
+    .map(([date, count]) => ({
+      date,
+      users: count,
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
   return (
     <div className="bg-slate-100 min-h-screen">
-      <header className="w-full flex flex-col gap-1 px-8 py-6 bg-slate-900 text-white">
-        <h1 className="text-2xl font-bold">
+      <header className="w-full flex flex-col gap-1 px-4 sm:px-8 py-5 sm:py-6 bg-slate-900 text-white">
+        <h1 className="text-xl sm:text-2xl font-bold">
           Welcome, {session?.user?.name} 👋
         </h1>
-
-        <p className="text-slate-400 text-sm">
+        <p className="text-slate-400 text-xs sm:text-sm">
           {tenant?.name} · Member since:{" "}
           {new Date(user?.createdAt ?? "").toLocaleDateString()}
         </p>
       </header>
 
-      <main className="max-w-6xl mx-auto p-8">
-        <div className="flex gap-4 max-w-4xl mx-auto mb-6">
-          <Card className="flex-1 p-5 bg-slate-800 text-white text-center">
-            <CardHeader>
-              <CardTitle>Company</CardTitle>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          <Card className="p-3 sm:p-5 bg-slate-800 text-white text-center">
+            <CardHeader className="p-0 mb-1 sm:mb-2">
+              <CardTitle className="text-sm sm:text-base">Company</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p>{tenant?.name}</p>
+            <CardContent className="p-0">
+              <p className="text-sm sm:text-base truncate">{tenant?.name}</p>
             </CardContent>
           </Card>
 
-          <Card className="flex-1 p-5 bg-indigo-600 text-white text-center">
-            <CardHeader>
-              <CardTitle>Role</CardTitle>
+          <Card className="p-3 sm:p-5 bg-indigo-600 text-white text-center">
+            <CardHeader className="p-0 mb-1 sm:mb-2">
+              <CardTitle className="text-sm sm:text-base">Role</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p>{session?.user?.role}</p>
+            <CardContent className="p-0">
+              <p className="text-sm sm:text-base">{session?.user?.role}</p>
             </CardContent>
           </Card>
 
-          <Card className="flex-1 p-5 bg-violet-600 text-white text-center">
-            <CardHeader>
-              <CardTitle>Member Since</CardTitle>
+          <Card className="p-3 sm:p-5 bg-violet-600 text-white text-center">
+            <CardHeader className="p-0 mb-1 sm:mb-2">
+              <CardTitle className="text-sm sm:text-base">
+                Member Since
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p>{new Date(user?.createdAt ?? "").toLocaleDateString()}</p>
+            <CardContent className="p-0">
+              <p className="text-xs sm:text-base">
+                {new Date(user?.createdAt ?? "").toLocaleDateString()}
+              </p>
             </CardContent>
           </Card>
-          <Card className="flex-1 p-5 bg-emerald-600 text-white text-center">
-            <CardHeader>
-              <CardTitle>Team Size</CardTitle>
+
+          <Card className="p-3 sm:p-5 bg-emerald-600 text-white text-center">
+            <CardHeader className="p-0 mb-1 sm:mb-2">
+              <CardTitle className="text-sm sm:text-base">Team Size</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p>{tenantUsers.length}</p>
+            <CardContent className="p-0">
+              <p className="text-sm sm:text-base">{tenantUsers.length}</p>
             </CardContent>
           </Card>
         </div>
-        <div className="bg-white rounded-lg p-6 shadow-sm mt-6 max-w-4xl mx-auto">
-          <h2 className="text-lg font-semibold mb-4">Team Composition</h2>
-          <RoleDistributionChart data={roleData} />
+
+        <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm mt-4 sm:mt-6">
+          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+            Team Composition
+          </h2>
+          <div className="w-full overflow-x-auto">
+            <RoleDistributionChart data={roleData} />
+          </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-sm mt-6 max-w-4xl mx-auto">
-          <h2 className="text-lg font-semibold mb-4">Team Growth</h2>
-          <UserGrowthChart data={chartData} />
+        <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm mt-4 sm:mt-6">
+          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+            Team Growth
+          </h2>
+          <div className="w-full overflow-x-auto">
+            <UserGrowthChart data={chartData} />
+          </div>
         </div>
       </main>
     </div>

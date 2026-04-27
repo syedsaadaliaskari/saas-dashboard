@@ -14,6 +14,21 @@ export default function UserGrowthChart({
 }: {
   data: { date: string; users: number }[];
 }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-75 text-slate-400">
+        <p>No data yet — invite team members to see growth</p>
+      </div>
+    );
+  }
+
+  if (data.length === 1) {
+    return (
+      <div className="flex items-center justify-center h-75 text-slate-400">
+        <p>Need at least 2 data points to show the chart</p>
+      </div>
+    );
+  }
   return (
     <ResponsiveContainer width="100%" height={300}>
       <AreaChart

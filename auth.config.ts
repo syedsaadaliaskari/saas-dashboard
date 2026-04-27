@@ -19,7 +19,16 @@ export const authConfig: NextAuthConfig = {
         nextUrl.pathname.startsWith("/signup");
 
       if (isAuthPage) return true;
-      return isLoggedIn;
+      if (!isLoggedIn) return false;
+
+      const isAdminRoute = nextUrl.pathname.startsWith("/admin");
+      const isAdmin = auth?.user?.role === "ADMIN";
+
+      if (isAdminRoute && !isAdmin) {
+        return Response.redirect(new URL("/user", nextUrl));
+      }
+
+      return true;
     },
   },
 };

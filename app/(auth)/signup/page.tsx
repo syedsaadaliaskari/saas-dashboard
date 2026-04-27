@@ -13,19 +13,18 @@ export default function SignUp() {
   const [error, setError] = useState("");
 
   const router = useRouter();
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setError("Password does not match");
-
+      setError("Passwords do not match");
       return;
     }
+
     const response = await fetch("/api/signup", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
 
@@ -39,56 +38,60 @@ export default function SignUp() {
   };
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center flex-col min-h-screen shadow-md ">
+    <div className="bg-gray-100 flex items-center justify-center flex-col min-h-screen px-4 py-8">
       <form
-        className="bg-gray-100 shadow-md rounded p-4 text-black flex flex-col items-center justify-center w-full max-w-md p-8 gap-2"
+        className="bg-white shadow-md rounded-lg p-6 sm:p-8 text-black flex flex-col w-full max-w-sm sm:max-w-md gap-3"
         onSubmit={handleSubmit}
       >
-        <h1 className="font-bold  text-2xl mb-4 text-black ">
-          Please signUp here
+        <h1 className="font-bold text-xl sm:text-2xl mb-2 text-black text-center">
+          Please sign up here
         </h1>
+
         <input
-          placeholder="Write your name"
+          placeholder="Your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
-          className="rounded shadow-sm outline-none p-2 w-full mb-3"
+          className="rounded shadow-sm outline-none p-2.5 w-full border border-gray-200 text-sm sm:text-base focus:ring-2 focus:ring-blue-300"
         />
+
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded shadow-sm outline-none p-2 w-full mb-3"
+          className="rounded shadow-sm outline-none p-2.5 w-full border border-gray-200 text-sm sm:text-base focus:ring-2 focus:ring-blue-300"
         />
+
         <input
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
-          className="rounded shadow-sm outline-none p-2 w-full mb-3"
+          className="rounded shadow-sm outline-none p-2.5 w-full border border-gray-200 text-sm sm:text-base focus:ring-2 focus:ring-blue-300"
         />
+
         <input
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm password"
           type="password"
-          className="rounded shadow-sm outline-none p-2 w-full mb-3"
+          className="rounded shadow-sm outline-none p-2.5 w-full border border-gray-200 text-sm sm:text-base focus:ring-2 focus:ring-blue-300"
         />
 
-        <Button>SignUp</Button>
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-      </form>
+        <Button type="submit" className="w-full py-2.5 mt-1">
+          Sign Up
+        </Button>
 
-      <div>
-        <span>
-          Already had account?{" "}
-          <Link href={"/signin"} className="text-blue-500">
-            SignIn
+        <p className="text-center text-sm sm:text-base text-gray-600">
+          Already have an account?{" "}
+          <Link href="/signin" className="text-blue-500 hover:underline">
+            Sign In
           </Link>
-        </span>
-      </div>
+        </p>
+      </form>
     </div>
   );
 }

@@ -10,58 +10,65 @@ export default function SignInPage() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     await signIn("credentials", {
       email,
       password,
       callbackUrl: "/onboarding",
     });
   };
+
   const loginWithGoogle = () =>
     signIn("google", { callbackUrl: "/onboarding" });
+
   return (
-    <div className="bg-gray-100 flex items-center justify-center flex-col min-h-screen shadow-md">
+    <div className="bg-gray-100 flex items-center justify-center flex-col min-h-screen px-4 py-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-100 shadow-md rounded p-4 text-black flex items-center justify-center flex-col w-full max-w-md"
+        className="bg-white shadow-md rounded-lg p-6 sm:p-8 text-black flex flex-col w-full max-w-sm sm:max-w-md"
       >
-        <h1 className="font-bold  text-2xl mb-4 text-black ">
+        <h1 className="font-bold text-xl sm:text-2xl mb-6 text-black text-center">
           Please fill out and enjoy!
         </h1>
+
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@gmail.com"
-          className="rounded shadow-sm outline-none p-2 w-full mb-3"
+          className="rounded shadow-sm outline-none p-2.5 w-full mb-3 border border-gray-200 text-sm sm:text-base focus:ring-2 focus:ring-blue-300"
         />
+
         <input
-          placeholder="password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
-          className="rounded shadow-sm outline-none p-2 w-full"
+          className="rounded shadow-sm outline-none p-2.5 w-full border border-gray-200 text-sm sm:text-base focus:ring-2 focus:ring-blue-300"
         />
-        <button className="rounded bg-blue-400 text-white shadow-md px-2 mt-3 ">
-          SignIn
+
+        <button
+          type="submit"
+          className="rounded bg-blue-400 hover:bg-blue-500 active:bg-blue-600 text-white shadow-md px-4 py-2.5 mt-4 w-full font-medium text-sm sm:text-base transition-colors"
+        >
+          Sign In
         </button>
 
-        <span>
+        <p className="text-center text-sm sm:text-base mt-4 text-gray-600">
           Don't have an account?{" "}
-          <Link href="/signup" className="text-blue-500">
-            SignUp
+          <Link href="/signup" className="text-blue-500 hover:underline">
+            Sign Up
           </Link>
-        </span>
+        </p>
       </form>
 
-      <span className="mt-3 text-black mb-3 ">OR</span>
+      <span className="mt-4 mb-4 text-gray-500 text-sm font-medium">OR</span>
 
       <button
         type="button"
         onClick={loginWithGoogle}
-        className="flex items-center gap-3 bg-gray-50 border border-gray-300 rounded px-4 py-2 hover:bg-gray-50 text-black font-medium shadow-sm"
+        className="flex items-center gap-3 bg-white border border-gray-300 rounded-lg px-5 py-2.5 hover:bg-gray-50 active:bg-gray-100 text-black font-medium shadow-sm text-sm sm:text-base transition-colors w-full max-w-sm sm:max-w-md justify-center"
       >
-        <svg width="20" height="20" viewBox="0 0 48 48">
+        <svg width="20" height="20" viewBox="0 0 48 48" className="shrink-0">
           <path
             fill="#EA4335"
             d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"

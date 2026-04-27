@@ -25,19 +25,25 @@ export default async function UserAnalytics() {
     {} as Record<string, number>,
   );
 
-  const chartData = Object.entries(usersByDate).map(([date, count]) => ({
-    date,
-    users: count,
-  }));
+  const chartData = Object.entries(usersByDate)
+    .map(([date, count]) => ({
+      date,
+      users: count,
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
-    <div className="min-h-screen bg-slate-100 p-8">
-      <h1 className="text-2xl font-bold mb-6 text-slate-800">Analytics</h1>
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-lg font-semibold mb-4 text-slate-700">
+    <div className="min-h-screen bg-slate-100 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-slate-800">
+        Analytics
+      </h1>
+      <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm">
+        <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-slate-700">
           User Growth
         </h2>
-        <UserGrowthChart data={chartData} />
+        <div className="w-full overflow-x-auto">
+          <UserGrowthChart data={chartData} />
+        </div>
       </div>
     </div>
   );

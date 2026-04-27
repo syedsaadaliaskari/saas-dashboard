@@ -21,16 +21,15 @@ export default async function AdminDashboard() {
     { name: "Admins", value: users.filter((u) => u.role === "ADMIN").length },
     { name: "Users", value: users.filter((u) => u.role === "USER").length },
   ];
+
   const tenant = await prisma.tenant.findUnique({
-    where: {
-      id: tenantId,
-    },
+    where: { id: tenantId },
   });
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <header className="w-full flex flex-col gap-1 px-8 py-6 bg-slate-900 text-white">
-        <h1 className="text-2xl font-bold">
+      <header className="w-full flex flex-col gap-1 px-4 md:px-8 py-6 bg-slate-900 text-white">
+        <h1 className="text-xl md:text-2xl font-bold">
           Welcome, {session?.user?.name} 👋
         </h1>
         <p className="text-slate-400 text-sm">
@@ -38,37 +37,48 @@ export default async function AdminDashboard() {
         </p>
       </header>
 
-      <main className="max-w-6xl mx-auto p-8">
-        <div className="flex gap-4 p-5 max-w-4xl mx-auto">
-          <Card className="flex-1 p-5 shadow-sm bg-slate-800 text-white text-center">
-            <CardHeader>
-              <CardTitle>Total Users</CardTitle>
+      <main className="max-w-4xl mx-auto p-4 md:p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <Card className="p-4 shadow-sm bg-slate-800 text-white text-center">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm md:text-base">
+                Total Users
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p>{users.length}</p>
+              <p className="text-3xl font-bold">{users.length}</p>
             </CardContent>
           </Card>
 
-          <Card className="flex-1 p-5 shadow-sm bg-indigo-600 text-white text-center">
-            <CardHeader>
-              <CardTitle>Total Admins</CardTitle>
+          <Card className="p-4 shadow-sm bg-indigo-600 text-white text-center">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm md:text-base">
+                Total Admins
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p>{users.filter((u) => u.role === "ADMIN").length}</p>
+              <p className="text-3xl font-bold">
+                {users.filter((u) => u.role === "ADMIN").length}
+              </p>
             </CardContent>
           </Card>
 
-          <Card className="flex-1 p-5 shadow-sm bg-violet-600 text-white text-center">
-            <CardHeader>
-              <CardTitle>Invite Code</CardTitle>
+          <Card className="p-4 shadow-sm bg-violet-600 text-white text-center">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm md:text-base">
+                Invite Code
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p>{tenant?.inviteCode}</p>
+              <p className="text-lg font-mono font-bold">
+                {tenant?.inviteCode}
+              </p>
               <CopyButton code={tenant?.inviteCode ?? ""} />
             </CardContent>
           </Card>
         </div>
-        <div className="bg-white rounded-lg p-6 shadow-sm mt-6 max-w-4xl mx-auto">
+
+        <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Role Distribution</h2>
           <RoleDistributionChart data={roleData} />
         </div>
