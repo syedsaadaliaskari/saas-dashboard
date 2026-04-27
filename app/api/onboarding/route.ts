@@ -9,22 +9,38 @@ export async function POST(request: Request) {
     const name = session?.user?.name;
     const email = session?.user?.email;
     const body = await request.json();
+    const { companyname } = body;
+
+    const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
     const existingUser = await prisma.user.findUnique({
       where: { email: email ?? "" },
     });
 
     if (existingUser) {
-      return NextResponse.json(
-        {
-          error: "Account already exists. Please sign in.",
-        },
-        { status: 400 },
-      );
+      if (existingUser.tenantId) {
+        // User already onboarded
+        return NextResponse.json(
+          { error: "Account already exists. Please sign in." },
+          { status: 400 },
+        );
+      } else {
+        // User exists but has no company — create tenant and link
+        const tenant = await prisma.tenant.create({
+          data: {
+            name: companyname,
+            inviteCode: inviteCode,
+          },
+        });
+        await prisma.user.update({
+          where: { email: email ?? "" },
+          data: { tenantId: tenant.id, role: "ADMIN" },
+        });
+        return NextResponse.json({ success: true, tenantId: tenant.id });
+      }
     }
 
-    const { companyname } = body;
-    const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    // New user — create tenant and user
     const tenant = await prisma.tenant.create({
       data: {
         name: companyname,
@@ -48,14 +64,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.log("Internal server error  ", error);
-
-    return NextResponse.json(
-      {
-        success: false,
-      },
-      {
-        status: 500,
-      },
-    );
+    return NextResponse.json({ success: false }, { status: 500 });
   }
 }

@@ -22,13 +22,34 @@ export const authConfig: NextAuthConfig = {
       if (!isLoggedIn) return false;
 
       const isAdminRoute = nextUrl.pathname.startsWith("/admin");
+      const isUserRoute = nextUrl.pathname.startsWith("/user");
       const isAdmin = auth?.user?.role === "ADMIN";
 
+      if (isUserRoute && isAdmin) {
+        return Response.redirect(new URL("/admin/dashboard", nextUrl));
+      }
+
       if (isAdminRoute && !isAdmin) {
-        return Response.redirect(new URL("/user", nextUrl));
+        return Response.redirect(new URL("/user/dashboard", nextUrl));
       }
 
       return true;
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+        token.tenantId = user.tenantId;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token) {
+        session.user.role = token.role as string;
+        session.user.tenantId = token.tenantId as string;
+      }
+      return session;
     },
   },
 };
